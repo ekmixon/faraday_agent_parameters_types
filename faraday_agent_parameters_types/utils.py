@@ -14,9 +14,8 @@ manifests_folder = Path(__file__).parent / "static" / "manifests"
 def get_schema(type_schema: Union[str, TypeSchema]) -> TypeSchema:
     if isinstance(type_schema, TypeSchema):
         return type_schema
-    if isinstance(type_schema, str):
-        if type_schema in DATA_TYPE:
-            return DATA_TYPE[type_schema]
+    if isinstance(type_schema, str) and type_schema in DATA_TYPE:
+        return DATA_TYPE[type_schema]
     raise ValidationError("Invalid Data Type")
 
 
@@ -24,11 +23,10 @@ def type_validate(type_schema: Union[str, TypeSchema, List[Union[str, TypeSchema
     if isinstance(type_schema, list):
         errors = {}
         for t in type_schema:
-            error = get_schema(t).validate({"data": data})
-            if not error:
-                return {}
-            else:
+            if error := get_schema(t).validate({"data": data}):
                 errors[t] = error
+            else:
+                return {}
     else:
         errors = get_schema(type_schema).validate({"data": data})
     return errors
@@ -81,8 +79,7 @@ def get_manifests(version_requested: str = None) -> dict:
                     all_manifests_dict[manifest_name] = {}
                 all_manifests_dict[manifest_name][parsed_ver] = loaded_json
 
-    manifests_dict = {}
-    for tool_name, tool in all_manifests_dict.items():
-        manifests_dict[tool_name] = tool[max(tool.keys())]
-
-    return manifests_dict
+    return {
+        tool_name: tool[max(tool.keys())]
+        for tool_name, tool in all_manifests_dict.items()
+    }

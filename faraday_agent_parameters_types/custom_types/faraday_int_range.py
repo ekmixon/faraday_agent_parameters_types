@@ -10,7 +10,7 @@ def validate_str(string):
     reg = re.match(regex, string)
     if not reg:
         raise ValidationError("Incorrect format, use: (integer)-(integer)")
-    if int(reg.group(1)) > int(reg.group(2)):
+    if int(reg[1]) > int(reg[2]):
         raise ValidationError("Range has to be in ascending order")
     return reg
 

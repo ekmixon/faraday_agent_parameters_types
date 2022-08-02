@@ -51,7 +51,7 @@ class Test_manifests_versions:
         for name, tool in manifests.items():
             if name == "test":
                 assert tool["manifest_version"] == "1.8.0"
-            if name == "test2":
+            elif name == "test2":
                 assert tool["manifest_version"] == "1.6.0"
 
     def test_ask_for_low_version(self):
@@ -59,7 +59,7 @@ class Test_manifests_versions:
         for name, tool in manifests.items():
             if name == "test":
                 assert tool["manifest_version"] == "1.7.0"
-            if name == "test2":
+            elif name == "test2":
                 assert tool["manifest_version"] == "1.6.0"
 
     def test_incorrect_version_requested(self):
